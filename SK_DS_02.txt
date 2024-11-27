@@ -1,0 +1,69 @@
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('your_file.csv')
+
+
+(or)Load the dataset
+
+from google.colab import files
+uploaded = files.upload()
+
+print("First few rows of the dataset:")
+print(data.head())
+
+print("\nMissing values in each column:")
+print(data.isnull().sum())
+
+
+data['Age'].fillna(data['Age'].median(), inplace=True)
+
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+
+data.drop('Cabin', axis=1, inplace=True)
+
+data.dropna(inplace=True)
+
+print("\nData after cleaning:")
+print(data.info())
+
+print("\nSurvival rate by gender:")
+print(data.groupby('Sex')['Survived'].mean())
+
+plt.figure(figsize=(6,4))
+sns.barplot(x='Sex', y='Survived', data=data)
+plt.title('Survival Rate by Gender')
+plt.show()
+
+print("\nSurvival rate by passenger class:")
+print(data.groupby('Pclass')['Survived'].mean())
+
+plt.figure(figsize=(6,4))
+sns.barplot(x='Pclass', y='Survived', data=data)
+plt.title('Survival Rate by Passenger Class')
+plt.show()
+
+plt.figure(figsize=(8,6))
+sns.histplot(data[data['Survived'] == 1]['Age'], color='green', label='Survived', kde=True)
+sns.histplot(data[data['Survived'] == 0]['Age'], color='red', label='Not Survived', kde=True)
+plt.legend()
+plt.title('Age Distribution of Survivors and Non-Survivors')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+print("\nSurvival rate by embarkation port:")
+print(data.groupby('Embarked')['Survived'].mean())
+
+plt.figure(figsize=(6,4))
+sns.barplot(x='Embarked', y='Survived', data=data)
+plt.title('Survival Rate by Embarkation Port')
+plt.show()
+
+plt.figure(figsize=(10,8))
+sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix')
+plt.show()
